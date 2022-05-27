@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ModalityName {
+  Presencial
+  Online
+}
+
 model User {
   id         Int          @id @default(autoincrement())
   email      String       @unique @db.VarChar(255)
@@ -18,6 +23,7 @@ model User {
   updatedAt  DateTime     @updatedAt
   Session    Session[]
   Enrollment Enrollment[]
+  Ticket     Ticket[]
 }
 
 model Session {
@@ -66,4 +72,40 @@ model Address {
   Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+}
+
+model HotelOption {
+  id       Int        @id @default(autoincrement())
+  isWanted Boolean    @default(false)
+  value    Int        @default(0)
+  Modality Modality[]
+}
+
+model Modality {
+  id            Int          @id @default(autoincrement())
+  name          ModalityName @unique
+  value         Int
+  hotelOptionId Int
+  HotelOption   HotelOption  @relation(fields: [hotelOptionId], references: [id])
+  Ticket        Ticket[]
+}
+
+model Ticket {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @unique
+  User       User      @relation(fields: [userId], references: [id])
+  modalityId Int       @unique
+  Modality   Modality  @relation(fields: [modalityId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  Payment    Payment[]
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int      @unique
+  Ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  isPayed   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
