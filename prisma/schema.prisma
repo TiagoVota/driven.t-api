@@ -76,17 +76,17 @@ model Address {
 
 model HotelOption {
   id       Int        @id @default(autoincrement())
-  isWanted Boolean    @default(false)
-  value    Int        @default(0)
+  isWanted Boolean    @default(false) @unique
+  price    Int        @default(0)
   Modality Modality[]
 }
 
 model Modality {
   id            Int          @id @default(autoincrement())
-  name          ModalityName @unique
-  value         Int
-  hotelOptionId Int
-  HotelOption   HotelOption  @relation(fields: [hotelOptionId], references: [id])
+  name          ModalityName
+  price         Int
+  hotelOptionId Int?
+  HotelOption   HotelOption? @relation(fields: [hotelOptionId], references: [id])
   Ticket        Ticket[]
 }
 
@@ -94,7 +94,7 @@ model Ticket {
   id         Int       @id @default(autoincrement())
   userId     Int       @unique
   User       User      @relation(fields: [userId], references: [id])
-  modalityId Int       @unique
+  modalityId Int
   Modality   Modality  @relation(fields: [modalityId], references: [id])
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
@@ -102,10 +102,11 @@ model Ticket {
 }
 
 model Payment {
-  id        Int      @id @default(autoincrement())
-  ticketId  Int      @unique
-  Ticket    Ticket   @relation(fields: [ticketId], references: [id])
-  isPayed   Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  ticketId   Int      @unique
+  Ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  isPayed    Boolean  @default(false)
+  totalPrice Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import { createEvent, createUser } from '../factories';
+import { createEvent, createUser, seedEvent } from '../factories';
 import { cleanDb } from '../helpers';
 
 beforeAll(async () => {
@@ -55,8 +55,7 @@ describe('POST /users', () => {
 
     describe('when event started', () => {
       beforeAll(async () => {
-        await prisma.event.deleteMany({});
-        await createEvent();
+        await seedEvent();
       });
 
       it('should respond with status 409 when there is an user with given email', async () => {
@@ -66,7 +65,7 @@ describe('POST /users', () => {
         const response = await server.post('/users').send(body);
 
         expect(response.status).toBe(httpStatus.CONFLICT);
-        expect(response.body).toEqual(duplicatedEmailError());
+        expect(response.body.message).toEqual(duplicatedEmailError().message);
       });
 
       it('should respond with status 201 and create user when given email is unique', async () => {
