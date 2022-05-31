@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import { HotelOption, ModalityName, PrismaClient } from '@prisma/client';
 import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
 async function main() {
+  // CREATE EVENT
   let event = await prisma.event.findFirst();
   if (!event) {
     event = await prisma.event.create({
@@ -17,6 +18,32 @@ async function main() {
   }
 
   console.log({ event });
+
+  // CREATE HOTEL OPTIONS
+  const hotelOptionsList = [
+    {
+      isWanted: true,
+      price: 35000,
+    },
+    {
+      isWanted: false,
+      price: 0,
+    },
+  ] as HotelOption[]
+
+	const hotelOptionsPromises = hotelOptionsList.map(hotelOption => {
+		const promise = prisma.hotelOption.upsert({
+			where: {
+				isWanted: hotelOption.isWanted,
+			},
+			update: {},
+			create: hotelOption,
+		})
+
+		return promise
+	})
+
+  await Promise.all(hotelOptionsPromises)
 }
 
 main()

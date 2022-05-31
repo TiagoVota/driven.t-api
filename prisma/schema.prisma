@@ -76,14 +76,14 @@ model Address {
 
 model HotelOption {
   id       Int        @id @default(autoincrement())
-  isWanted Boolean    @default(false)
+  isWanted Boolean    @default(false) @unique
   price    Int        @default(0)
   Modality Modality[]
 }
 
 model Modality {
   id            Int          @id @default(autoincrement())
-  name          ModalityName @unique
+  name          ModalityName
   price         Int
   hotelOptionId Int?
   HotelOption   HotelOption? @relation(fields: [hotelOptionId], references: [id])
