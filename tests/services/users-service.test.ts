@@ -3,12 +3,13 @@ import { prisma } from '@/config';
 import userService, { duplicatedEmailError } from '@/services/users-service';
 import faker from '@faker-js/faker';
 import bcrypt from 'bcrypt';
-import { createUser as createUserSeed } from '../factories';
+import { createUser as createUserSeed, seedEvent } from '../factories';
 import { cleanDb } from '../helpers';
 
 beforeAll(async () => {
   await init();
   await cleanDb();
+  await seedEvent();
 });
 
 describe('createUser', () => {

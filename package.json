@@ -36,6 +36,7 @@
     "ci:build": "docker-compose -f docker-compose.test.yml build",
     "ci:test": "docker-compose -f docker-compose.test.yml run drivent-test bash -c 'npm run test:migration:run && npm test'",
 
+		"git:update": "git add . && git status",
 		"dev:local:seed": "npm run dev:load-envs -- ts-node prisma/seed.ts",
 		"dev:local:migrate": "npm run dev:load-envs prisma migrate dev",
 		"dev:local:studio": "npm run dev:load-envs prisma studio",

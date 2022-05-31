@@ -14,3 +14,8 @@ export function createEvent(params: Partial<Event> = {}): Promise<Event> {
     },
   });
 }
+
+export async function seedEvent() {
+  await prisma.event.deleteMany({});
+  await createEvent();
+}
