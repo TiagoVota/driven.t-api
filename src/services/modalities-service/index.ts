@@ -28,9 +28,15 @@ function removeObjectsWithDuplicateNames(array: ModalitiesWithHotelOptions[]): M
 }
 
 function combineArrays(modalities: Modality[], hotelOptions: HotelOption[]): ModalitiesWithHotelOptions[] {
+  const filteredModalities = modalities.filter((modality) => modality.hotelOptionId !== null);
+  const idUpdatedHotelOptions = hotelOptions.map((hotelOption, index) => ({
+    ...hotelOption,
+    id: filteredModalities[index].id,
+  }));
+
   return modalities.map((modality) => {
     if (modality.hotelOptionId !== null) {
-      return { ...modality, hotelOptions };
+      return { ...modality, hotelOptions: idUpdatedHotelOptions };
     }
     return modality;
   });
