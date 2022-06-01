@@ -20,30 +20,30 @@ async function main() {
   console.log({ event });
 
   // CREATE HOTEL OPTIONS
-  const hotelOptionsList = [
-    {
-      isWanted: true,
-      price: 35000,
-    },
-    {
-      isWanted: false,
-      price: 0,
-    },
-  ] as HotelOption[]
+  // const hotelOptionsList = [
+  //   {
+  //     isWanted: true,
+  //     price: 35000,
+  //   },
+  //   {
+  //     isWanted: false,
+  //     price: 0,
+  //   },
+  // ] as HotelOption[]
 
-	const hotelOptionsPromises = hotelOptionsList.map(hotelOption => {
-		const promise = prisma.hotelOption.upsert({
-			where: {
-				isWanted: hotelOption.isWanted,
-			},
-			update: {},
-			create: hotelOption,
-		})
+	// const hotelOptionsPromises = hotelOptionsList.map(hotelOption => {
+	// 	const promise = prisma.hotelOption.upsert({
+	// 		where: {
+	// 			isWanted: hotelOption.isWanted,
+	// 		},
+	// 		update: {},
+	// 		create: hotelOption,
+	// 	})
 
-		return promise
-	})
+	// 	return promise
+	// })
 
-  await Promise.all(hotelOptionsPromises)
+  // await Promise.all(hotelOptionsPromises)
 }
 
 main()
