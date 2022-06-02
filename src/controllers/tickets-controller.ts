@@ -15,3 +15,9 @@ export async function findTicketPrice(req: Request, res: Response) {
   const ticket = await ticketsService.findTicketPriceByUserId(userId);
   return res.status(httpStatus.OK).send(ticket);
 }
+
+export async function findTicketByUserId(req: Request, res: Response) {
+  const userId = res.locals.userId;
+
+  return res.status(httpStatus.OK).send('userId');
+}
