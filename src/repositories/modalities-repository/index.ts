@@ -16,9 +16,11 @@ async function findModalityPriceById(modalityId: number) {
     },
     select: {
       price: true,
+      name: true,
       HotelOption: {
         select: {
           price: true,
+          isWanted: true,
         },
       },
     },

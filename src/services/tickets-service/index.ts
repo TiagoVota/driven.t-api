@@ -35,13 +35,14 @@ export async function findTicketPriceByUserId(userId: number) {
   await checkIfUserExists(userId);
   await checkIfTicketExists(userId);
   const modality = await ticketRepository.findTicketModalityByUserId(userId);
-  const price = await modalitiesRepository.findModalityPriceById(modality.modalityId);
-  const ticketPrice = sumPrices(price.price, price.HotelOption.price);
-  const ticket = {
-    modality: modality.modalityId,
+  const ticket = await modalitiesRepository.findModalityPriceById(modality.modalityId);
+  const ticketPrice = sumPrices(ticket.price, ticket.HotelOption.price);
+  const ticketName = getTicketName(ticket);
+  const ticketData = {
+    name: ticketName,
     price: ticketPrice,
   };
-  return ticket;
+  return ticketData;
 }
 
 async function checkIfTicketExists(userId: number) {
@@ -52,8 +53,17 @@ async function checkIfTicketExists(userId: number) {
 }
 
 function sumPrices(ticketPrice: number, hotelPrice: number) {
-  const sum = ticketPrice + hotelPrice;
+  const sum = (ticketPrice + hotelPrice) / 100;
   return sum;
+}
+
+function getTicketName(ticket: any) {
+  let name = ticket.name;
+  if (ticket.name === 'Online') {
+    return name;
+  }
+  ticket.HotelOption.isWanted ? (name += ' + Com Hotel') : (name += ' + Sem Hotel');
+  return name;
 }
 
 const ticketsService = {
