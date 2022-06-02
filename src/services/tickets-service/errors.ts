@@ -13,3 +13,10 @@ export function invalidUserError(): ApplicationError {
     message: 'User does not exist',
   };
 }
+
+export function invalidTicketError(): ApplicationError {
+  return {
+    name: 'InvalidTicketError',
+    message: 'Ticket does not exist',
+  };
+}

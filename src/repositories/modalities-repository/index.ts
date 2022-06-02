@@ -9,8 +9,25 @@ async function getAll() {
   });
 }
 
+async function findModalityPriceById(modalityId: number) {
+  return prisma.modality.findUnique({
+    where: {
+      id: modalityId,
+    },
+    select: {
+      price: true,
+      HotelOption: {
+        select: {
+          price: true,
+        },
+      },
+    },
+  });
+}
+
 const modalitiesRepository = {
   getAll,
+  findModalityPriceById,
 };
 
 export default modalitiesRepository;

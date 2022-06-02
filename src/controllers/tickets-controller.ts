@@ -9,3 +9,9 @@ export async function createTicket(req: Request, res: Response) {
 
   res.sendStatus(httpStatus.CREATED);
 }
+
+export async function findTicketPrice(req: Request, res: Response) {
+  const { userId } = req.body;
+  const ticket = await ticketsService.findTicketPriceByUserId(userId);
+  return res.status(httpStatus.OK).send(ticket);
+}
