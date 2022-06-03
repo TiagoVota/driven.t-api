@@ -69,9 +69,19 @@ function getTicketName(ticket: any) {
   return name;
 }
 
+async function getTicketByUserId(userId: number) {
+  const ticket = await ticketRepository.findTicketByUserId(userId);
+  if (!ticket) {
+    throw invalidTicketError();
+  }
+
+  return ticket;
+}
+
 const ticketsService = {
   createTicket,
   findTicketPriceByUserId,
+  getTicketByUserId,
 };
 
 export default ticketsService;

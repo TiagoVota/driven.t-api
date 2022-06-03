@@ -15,3 +15,10 @@ export async function findTicketPrice(req: Request, res: Response) {
   const ticket = await ticketsService.findTicketPriceByUserId(userId);
   return res.status(httpStatus.OK).send(ticket);
 }
+
+export async function getTicketByUserId(req: Request, res: Response) {
+  const { userId } = req.params;
+  const ticket = await ticketsService.getTicketByUserId(+userId);
+
+  return res.status(httpStatus.OK).send(ticket);
+}
