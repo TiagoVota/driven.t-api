@@ -1,13 +1,15 @@
 import { Ticket } from '@prisma/client';
+
 import ticketRepository from '@/repositories/ticket-repository';
-import { duplicatedUserError, invalidUserError, invalidTicketError } from './errors';
 import userRepository from '@/repositories/user-repository';
+import paymentRepository from '@/repositories/payment-repository';
 import modalitiesRepository from '@/repositories/modalities-repository';
+
+import { duplicatedUserError, invalidUserError, invalidTicketError } from './errors';
 
 export type CreateTicketParams = Pick<Ticket, 'modalityId' | 'userId'>;
 
 // CREATE TICKET
-
 export async function createTicket(CreateTicketParams: CreateTicketParams) {
   await checkIfUserExists(CreateTicketParams.userId);
   await checkIfUserAlreadyHasATicket(CreateTicketParams.userId);
@@ -30,15 +32,17 @@ async function checkIfUserAlreadyHasATicket(userId: number) {
 }
 
 // FIND TICKET PRICE
-
 export async function findTicketPriceByUserId(userId: number) {
   await checkIfUserExists(userId);
-  await checkIfTicketExists(userId);
+  const ticketInfo = await checkIfTicketExists(userId);
+  const isPayed = await checkIfTicketIsPayed(ticketInfo.id);
   const modality = await ticketRepository.findTicketModalityByUserId(userId);
   const ticket = await modalitiesRepository.findModalityPriceById(modality.modalityId);
   const ticketPrice = sumPrices(ticket.price, ticket.HotelOption?.price);
   const ticketName = getTicketName(ticket);
   const ticketData = {
+    id: ticketInfo.id,
+    isPayed,
     name: ticketName,
     price: ticketPrice,
   };
@@ -50,6 +54,13 @@ async function checkIfTicketExists(userId: number) {
   if (!ticket) {
     throw invalidTicketError();
   }
+  return ticket;
+}
+
+async function checkIfTicketIsPayed(ticketId: number) {
+  const payment = await paymentRepository.findByTicketId(ticketId);
+
+  return Boolean(payment?.isPayed);
 }
 
 function sumPrices(ticketPrice: number, hotelPrice: number) {
