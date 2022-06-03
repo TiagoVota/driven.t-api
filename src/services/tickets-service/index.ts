@@ -74,4 +74,5 @@ const ticketsService = {
   findTicketPriceByUserId,
 };
 
+export * from './errors';
 export default ticketsService;
