@@ -25,6 +25,14 @@ async function findUser(userId: number) {
   });
 }
 
+async function findTicketByUserId(userId: number) {
+  return prisma.ticket.findUnique({
+    where: {
+      userId,
+    },
+  });
+}
+
 async function findTicketModalityByUserId(userId: number) {
   return prisma.ticket.findUnique({
     where: {
@@ -40,6 +48,7 @@ const ticketRepository = {
   create,
   findByUserId,
   findUser,
+  findTicketByUserId,
   findTicketModalityByUserId,
 };
 
