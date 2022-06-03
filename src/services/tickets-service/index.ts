@@ -64,10 +64,7 @@ async function checkIfTicketIsPayed(ticketId: number) {
 }
 
 function sumPrices(ticketPrice: number, hotelPrice: number) {
-  if (hotelPrice === undefined) {
-    return ticketPrice / 100;
-  }
-  const sum = (ticketPrice + hotelPrice) / 100;
+  const sum = Boolean(hotelPrice) ? ticketPrice + hotelPrice : ticketPrice;
   return sum;
 }
 
