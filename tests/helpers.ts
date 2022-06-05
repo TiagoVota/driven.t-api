@@ -1,9 +1,11 @@
+import { jest } from '@jest/globals';
 import * as jwt from 'jsonwebtoken';
-import { User } from '@prisma/client';
 
-import { createUser } from './factories';
-import { createSession } from './factories/sessions-factory';
 import { prisma } from '@/config';
+
+import { createUser, createSession } from './factories';
+
+import { User } from '@prisma/client';
 
 export async function cleanDb() {
   await prisma.address.deleteMany({});
@@ -24,4 +26,9 @@ export async function generateValidToken(user?: User) {
   await createSession(token);
 
   return token;
+}
+
+export function cleanMocks() {
+  jest.clearAllMocks();
+  jest.resetAllMocks();
 }
