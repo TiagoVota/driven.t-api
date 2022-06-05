@@ -7,6 +7,6 @@ const ticketsRouter = Router();
 
 ticketsRouter.get('/:userId', getTicketByUserId);
 ticketsRouter.post('/', validateBody(createTicketSchema), authenticateToken, createTicket);
-ticketsRouter.post('/price', findTicketPrice);
+ticketsRouter.post('/price', authenticateToken, findTicketPrice);
 
 export { ticketsRouter };

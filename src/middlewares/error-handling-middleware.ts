@@ -32,6 +32,18 @@ export function handleApplicationErrors(
     });
   }
 
+  if (err.name === 'NotFoundTicketError') {
+    return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'DuplicatedPaymentError') {
+    return res.status(httpStatus.CONFLICT).send({
+      message: err.message,
+    });
+  }
+
   /* eslint-disable-next-line no-console */
   console.error(err);
   res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
