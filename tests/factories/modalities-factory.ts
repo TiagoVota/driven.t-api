@@ -49,3 +49,21 @@ async function createModality(name: ModalityName, hotelOptionId?: number, price?
 
   return modality;
 }
+
+export async function findModality(haveHotelOption?: boolean) {
+  const whereSelection = Boolean(haveHotelOption)
+    ? {
+        NOT: [
+          {
+            hotelOptionId: null,
+          },
+        ],
+      }
+    : {};
+
+  const modality = await prisma.modality.findFirst({
+    where: whereSelection,
+  });
+
+  return modality;
+}
