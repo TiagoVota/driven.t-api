@@ -5,7 +5,7 @@ import { authenticateToken } from '@/middlewares';
 const ticketsRouter = Router();
 
 ticketsRouter.post('/', createTicket);
-ticketsRouter.get('/', findTicketPrice);
-ticketsRouter.get('/user', authenticateToken, findTicketByUserId);
+ticketsRouter.post('/price', findTicketPrice);
+ticketsRouter.get('/', authenticateToken, findTicketByUserId);
 
 export { ticketsRouter };
