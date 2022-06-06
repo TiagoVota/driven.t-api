@@ -14,7 +14,7 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'ConflictError' || err.name === 'DuplicatedEmailError') {
+  if (err.name === 'ConflictError' || err.name === 'DuplicatedEmailError' || err.name === 'DuplicatedUserError') {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });
@@ -32,7 +32,7 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'NotFoundTicketError') {
+  if (err.name === 'NotFoundTicketError' || err.name === 'InvalidUserError' || err.name === 'InvalidTicketError') {
     return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,
     });
