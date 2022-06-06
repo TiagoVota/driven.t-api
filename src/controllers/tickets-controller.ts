@@ -3,8 +3,9 @@ import httpStatus from 'http-status';
 import ticketsService from '@/services/tickets-service';
 import { AuthenticatedRequest } from '@/middlewares';
 
-export async function createTicket(req: Request, res: Response) {
-  const { userId, modalityId } = req.body;
+export async function createTicket(req: AuthenticatedRequest, res: Response) {
+  const { modalityId } = req.body;
+  const userId = req.userId;
   const ticketData = { userId, modalityId };
   await ticketsService.createTicket(ticketData);
 
