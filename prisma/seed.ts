@@ -1,4 +1,4 @@
-import { HotelOption, PrismaClient } from '@prisma/client';
+import { HotelOption, Modality, PrismaClient } from '@prisma/client';
 import dayjs from 'dayjs';
 
 const prisma = new PrismaClient();
@@ -44,8 +44,32 @@ async function main() {
 
     return promise;
   });
-
   await Promise.all(hotelOptionsPromises);
+
+  const hotelOptions = await prisma.hotelOption.findMany({});
+
+  const modalitiesList = [
+    {
+      name: 'Presencial',
+      price: 25000,
+      hotelOptionId: hotelOptions[0].id,
+    },
+    {
+      name: 'Presencial',
+      price: 25000,
+      hotelOptionId: hotelOptions[1].id,
+    },
+    {
+      name: 'Online',
+      price: 10000,
+      hotelOptionId: null,
+    },
+  ] as Modality[];
+
+  await prisma.modality.deleteMany({});
+  await prisma.modality.createMany({
+    data: modalitiesList,
+  });
 }
 
 main()

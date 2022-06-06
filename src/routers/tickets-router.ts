@@ -5,7 +5,7 @@ import { createTicketSchema } from '@/schemas';
 
 const ticketsRouter = Router();
 
-ticketsRouter.get('/:userId', getTicketByUserId);
+ticketsRouter.get('/', authenticateToken, getTicketByUserId);
 ticketsRouter.post('/', validateBody(createTicketSchema), authenticateToken, createTicket);
 ticketsRouter.post('/price', authenticateToken, findTicketPrice);
 

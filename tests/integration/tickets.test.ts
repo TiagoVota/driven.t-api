@@ -57,3 +57,23 @@ describe('POST /tickets/price', () => {
     });
   });
 });
+
+describe('GET /tickets', () => {
+  it('should return status 404 if user does not have a ticket', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+  });
+
+  it('should return status 200 if user already has a ticket', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const modality = await findModality();
+    await createTicket(user.id, modality.id);
+    const response = await server.get('/tickets').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+  });
+});
