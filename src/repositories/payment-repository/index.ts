@@ -1,9 +1,25 @@
 import { prisma } from '@/config';
+import { Prisma } from '@prisma/client';
 
-export function findByUserId(userId: number) {
-  return prisma.payment.findUnique({
+async function findByTicketId(ticketId: number) {
+  const payment = await prisma.payment.findUnique({
     where: {
-      ticketId: userId,
+      ticketId,
     },
   });
+
+  return payment;
 }
+
+async function create(data: Prisma.PaymentUncheckedCreateInput) {
+  return prisma.payment.create({
+    data,
+  });
+}
+
+const paymentRepository = {
+  findByTicketId,
+  create,
+};
+
+export default paymentRepository;

@@ -7,6 +7,16 @@ async function create(data: Prisma.TicketUncheckedCreateInput) {
   });
 }
 
+async function findByUserId(userId: number) {
+  const ticket = prisma.ticket.findUnique({
+    where: {
+      userId,
+    },
+  });
+
+  return ticket;
+}
+
 async function findUser(userId: number) {
   return prisma.ticket.findUnique({
     where: {
@@ -15,13 +25,10 @@ async function findUser(userId: number) {
   });
 }
 
-async function findByUserId(userId: number) {
+async function findTicketByUserId(userId: number) {
   return prisma.ticket.findUnique({
     where: {
-      userId: userId,
-    },
-    include: {
-      Modality: true,
+      userId,
     },
   });
 }
@@ -39,9 +46,10 @@ async function findTicketModalityByUserId(userId: number) {
 
 const ticketRepository = {
   create,
-  findUser,
-  findTicketModalityByUserId,
   findByUserId,
+  findUser,
+  findTicketByUserId,
+  findTicketModalityByUserId,
 };
 
 export default ticketRepository;

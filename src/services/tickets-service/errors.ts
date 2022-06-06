@@ -20,3 +20,10 @@ export function invalidTicketError(): ApplicationError {
     message: 'Ticket does not exist',
   };
 }
+
+export function notFoundTicketError(userId: number): ApplicationError {
+  return {
+    name: 'NotFoundTicketError',
+    message: `Not found ticket from user with '${userId}' id`,
+  };
+}
