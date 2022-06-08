@@ -6,6 +6,12 @@ import { duplicatedPaymentError } from './errors';
 import { Payment } from '@prisma/client';
 import { notFoundTicketError } from '../tickets-service';
 
+export async function findPaymentByUserId(usertId: number) {
+  const { id } = await findTicketOrFail(usertId);
+  const payment = await paymentRepository.findByTicketId(id);
+  return payment;
+}
+
 // CONFIRM PAYMENT
 export async function createPayment(params: CreditCardParams): Promise<Payment> {
   const { creditCardData, userId } = params;
@@ -51,6 +57,7 @@ export interface CreditCardBody {
 
 const paymentService = {
   createPayment,
+  findPaymentByUserId,
 };
 
 export * from './errors';

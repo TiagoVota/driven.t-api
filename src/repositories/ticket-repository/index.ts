@@ -30,6 +30,9 @@ async function findTicketByUserId(userId: number) {
     where: {
       userId,
     },
+    include: {
+      Modality: true,
+    },
   });
 }
 

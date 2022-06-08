@@ -22,3 +22,9 @@ export async function makePayment(req: AuthenticatedRequest, res: Response) {
 
   res.status(httpStatus.CREATED).send(paymentReturnInfo);
 }
+
+export async function findPaymentByUserId(req: AuthenticatedRequest, res: Response) {
+  const userId = req.userId;
+  const payment = await paymentService.findPaymentByUserId(userId);
+  return res.status(httpStatus.OK).send(payment);
+}

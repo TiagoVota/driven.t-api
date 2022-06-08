@@ -49,6 +49,14 @@ export async function findTicketPriceByUserId(userId: number) {
   return ticketData;
 }
 
+export async function findTicketByUserId(userId: number) {
+  await checkIfUserExists(userId);
+  await checkIfTicketExists(userId);
+  const ticket = await ticketRepository.findByUserId(userId);
+
+  return ticket;
+}
+
 async function checkIfTicketExists(userId: number) {
   const ticket = await ticketRepository.findUser(userId);
   if (!ticket) {
