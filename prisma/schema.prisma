@@ -24,6 +24,7 @@ model User {
   Session    Session[]
   Enrollment Enrollment[]
   Ticket     Ticket[]
+  RoomsUsers RoomsUsers[]
 }
 
 model Session {
@@ -76,7 +77,7 @@ model Address {
 
 model HotelOption {
   id       Int        @id @default(autoincrement())
-  isWanted Boolean    @default(false) @unique
+  isWanted Boolean    @unique @default(false)
   price    Int        @default(0)
   Modality Modality[]
 }
@@ -109,4 +110,27 @@ model Payment {
   totalPrice Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Hotel {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+  Room Room[]
+}
+
+model Room {
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(255)
+  hotelId    Int
+  Hotel      Hotel        @relation(fields: [hotelId], references: [id])
+  capacity   Int
+  RoomsUsers RoomsUsers[]
+}
+
+model RoomsUsers {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  User   User @relation(fields: [userId], references: [id])
+  roomId Int
+  Room   Room @relation(fields: [roomId], references: [id])
 }
