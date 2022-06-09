@@ -1,12 +1,16 @@
 import roomRepository from '@/repositories/room-repository';
 
+import { makeRoomTypeByCapacity } from './utils';
+
 import { noFoundRoomError } from './errors';
 
 async function findRoomByUserIdOrFail(userId: number) {
   const room = await roomRepository.findByUserId(userId);
   if (!room) throw noFoundRoomError(userId);
+  delete Object.assign(room, { ['hotel']: room['Hotel'] })['Hotel'];
 
-  return room;
+  const roomType = makeRoomTypeByCapacity(room.capacity);
+  return { ...room, roomType };
 }
 
 async function findRoomOccupation(roomId: number) {
