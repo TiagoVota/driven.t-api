@@ -29,3 +29,19 @@ describe('POST /payments', () => {
     expect(response.body.isPayed).toBe(true);
   });
 });
+
+describe('GET /payments', () => {
+  it('should find a payment and return 200', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const modality = await findModality();
+    await createTicket(user.id, modality.id);
+    const paymentBody = createPaymentBody();
+
+    const createdPayment = await server.post('/payments').set('Authorization', `Bearer ${token}`).send(paymentBody);
+    const response = await server.get('/payments').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.id).toEqual(createdPayment.body.id);
+  });
+});
