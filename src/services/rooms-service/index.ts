@@ -2,15 +2,6 @@ import roomRepository from '@/repositories/room-repository';
 
 import { noFoundRoomError } from './errors';
 
-export async function getUserRoomInfo(userId: number) {
-  const room = await findRoomByUserIdOrFail(userId);
-
-  const roomUsers = await roomRepository.findUserInRoom(room.id);
-  const occupied = roomUsers.length;
-
-  return { ...room, occupied };
-}
-
 async function findRoomByUserIdOrFail(userId: number) {
   const room = await roomRepository.findByUserId(userId);
   if (!room) throw noFoundRoomError(userId);
@@ -18,8 +9,16 @@ async function findRoomByUserIdOrFail(userId: number) {
   return room;
 }
 
+async function findRoomOccupation(roomId: number) {
+  const roomUsers = await roomRepository.findUserInRoom(roomId);
+  const occupation = roomUsers.length;
+
+  return occupation;
+}
+
 const roomService = {
-  getUserRoomInfo,
+  findRoomByUserIdOrFail,
+  findRoomOccupation,
 };
 
 export * from './errors';
