@@ -6,3 +6,6 @@ export * from './modalities-factory';
 export * from './tickets-factory';
 export * from './payments-factory';
 export * from './id-factory';
+export * from './hotels-factory';
+export * from './rooms-factory';
+export * from './roomsUsers-factory';
