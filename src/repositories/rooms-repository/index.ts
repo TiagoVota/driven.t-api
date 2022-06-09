@@ -5,6 +5,9 @@ async function getByHotelId(hotelId: number) {
     where: {
       hotelId,
     },
+    orderBy: {
+      name: 'asc',
+    },
   });
 }
 

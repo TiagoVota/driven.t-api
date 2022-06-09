@@ -1,9 +1,14 @@
 import roomsRepository from '@/repositories/rooms-repository';
+import hotelRepository from '@/repositories/hotel-repository';
 import roomsUsersRepository from '@/repositories/rooms-users-repository';
 import { Room } from '@prisma/client';
+import { hotelDoesNotExistsError } from './errors';
 
 async function getByHotelId(hotelId: number) {
-  //check if hotel with that Id exists, if not throw error
+  if (isNaN(hotelId)) throw hotelDoesNotExistsError(hotelId);
+
+  const hotel = await hotelRepository.find(hotelId);
+  if (!hotel) throw hotelDoesNotExistsError(hotelId);
 
   const rooms = await roomsRepository.getByHotelId(hotelId);
 

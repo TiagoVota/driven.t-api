@@ -71,7 +71,11 @@ async function main() {
     data: modalitiesList,
   });
 
-  const hotelsList = [{ name: 'Driven Resort' }, { name: 'Driven Palace' }, { name: 'Driven World' }] as Hotel[];
+  const hotelsList = [
+    { name: 'Driven Resort', image: 'https://picsum.photos/300/300' },
+    { name: 'Driven Palace', image: 'https://picsum.photos/300/300' },
+    { name: 'Driven World', image: 'https://picsum.photos/300/300' },
+  ] as Hotel[];
   await prisma.hotel.deleteMany({});
   await prisma.hotel.createMany({
     data: hotelsList,
