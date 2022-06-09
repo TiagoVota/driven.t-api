@@ -16,6 +16,9 @@ export async function cleanDb() {
   await prisma.ticket.deleteMany({});
   await prisma.modality.deleteMany({});
   await prisma.hotelOption.deleteMany({});
+  await prisma.roomsUsers.deleteMany({});
+  await prisma.room.deleteMany({});
+  await prisma.hotel.deleteMany({});
   await prisma.user.deleteMany({});
 }
 

@@ -8,8 +8,21 @@ async function find(hotelId: number) {
   });
 }
 
+async function getHotels() {
+  return prisma.hotel.findMany({
+    include: {
+      Room: {
+        include: {
+          RoomsUsers: true,
+        },
+      },
+    },
+  });
+}
+
 const hotelRepository = {
   find,
+  getHotels,
 };
 
 export default hotelRepository;
