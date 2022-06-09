@@ -1,4 +1,4 @@
-import { HotelOption, Modality, PrismaClient } from '@prisma/client';
+import { HotelOption, Modality, Hotel, Room, PrismaClient } from '@prisma/client';
 import dayjs from 'dayjs';
 
 const prisma = new PrismaClient();
@@ -69,6 +69,27 @@ async function main() {
   await prisma.modality.deleteMany({});
   await prisma.modality.createMany({
     data: modalitiesList,
+  });
+
+  const hotelsList = [{ name: 'Driven Resort' }, { name: 'Driven Palace' }, { name: 'Driven World' }] as Hotel[];
+  await prisma.hotel.deleteMany({});
+  await prisma.hotel.createMany({
+    data: hotelsList,
+  });
+
+  const hotels = await prisma.hotel.findMany({});
+
+  type RoomWithoutId = Omit<Room, 'id'>;
+  const roomQuantity = 16;
+  const roomsList = [] as RoomWithoutId[];
+  for (let i = 0; i < roomQuantity; i++) {
+    const capacity = Math.floor(Math.random() * 3) + 1;
+    roomsList.push({ name: `${100 + i}`, hotelId: hotels[0].id, capacity });
+  }
+
+  await prisma.room.deleteMany({});
+  await prisma.room.createMany({
+    data: roomsList,
   });
 }
 
