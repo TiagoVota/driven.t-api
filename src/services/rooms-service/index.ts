@@ -27,6 +27,12 @@ async function reservateRoom(userId: number, roomId: number) {
   return;
 }
 
+async function checkIfUserHasARoom(userId: number) {
+  const room = await roomsUsersRepository.findByUserId(userId);
+
+  return room;
+}
+
 async function getRoomAvailabilities(rooms: Room[]) {
   const roomsWithAvailability = [];
   for (let i = 0; i < rooms.length; i++) {
@@ -57,6 +63,7 @@ async function findRoomOccupation(roomId: number) {
 const roomService = {
   getByHotelId,
   reservateRoom,
+  checkIfUserHasARoom,
   findRoomByUserIdOrFail,
   findRoomOccupation,
 };

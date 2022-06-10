@@ -45,6 +45,33 @@ describe('GET /rooms/hotelId', () => {
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
   });
 });
+describe('GET /rooms', () => {
+  it('should return status 200 and return the user room if he has any', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const hotel = await createHotel();
+    const room = await createRoomByHotelId(hotel.id);
+    await server.post(`/rooms`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+
+    const response = await server.get(`/rooms`).set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.userId).toEqual(user.id);
+    expect(response.body.roomId).toEqual(room.id);
+  });
+
+  it('should return status 200 and return a empty body if user does not have a room', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const hotel = await createHotel();
+    await createRoomByHotelId(hotel.id);
+
+    const response = await server.get(`/rooms`).set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body.id).toBeUndefined();
+  });
+});
 
 describe('POST /rooms', () => {
   it('should return status 201 persist data on RoomUsers table', async () => {
