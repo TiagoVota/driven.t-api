@@ -14,3 +14,11 @@ export async function createUser(params: Partial<User> = {}): Promise<User> {
     },
   });
 }
+
+export async function findUserById(userId: number) {
+  return prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+}

@@ -1,5 +1,4 @@
 import { prisma } from '@/config';
-import { Prisma } from '@prisma/client';
 
 async function findByUserId(userId: number) {
   const room = await prisma.room.findFirst({
