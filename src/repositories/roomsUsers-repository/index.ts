@@ -1,4 +1,4 @@
-import { prisma } from '@/config';
+import { prisma, redis } from '@/config';
 
 async function findByUserId(userId: number) {
   return prisma.roomsUsers.findUnique({
@@ -9,6 +9,7 @@ async function findByUserId(userId: number) {
 }
 
 async function deleteById(id: number) {
+  await redis.del('hotels');
   return prisma.roomsUsers.delete({
     where: {
       id,
