@@ -8,7 +8,11 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  if (err.name === 'CannotEnrollBeforeStartDateError' || err.name === 'HotelDoesNotExistsError') {
+  if (
+    err.name === 'CannotEnrollBeforeStartDateError' ||
+    err.name === 'HotelDoesNotExistsError' ||
+    err.name === 'RoomDoesNotExistsError'
+  ) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
@@ -45,7 +49,7 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'DuplicatedPaymentError') {
+  if (err.name === 'DuplicatedPaymentError' || err.name === 'UserAlreadyHasARoomError') {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });

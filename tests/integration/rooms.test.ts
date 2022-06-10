@@ -1,3 +1,4 @@
+import { prisma } from '@/config';
 import supertest from 'supertest';
 import httpStatus from 'http-status';
 import app, { init } from '@/app';
@@ -42,5 +43,74 @@ describe('GET /rooms/hotelId', () => {
     const response = await server.get(`/rooms/hotel`).set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
+  });
+});
+
+describe('POST /rooms', () => {
+  it('should return status 201 persist data on RoomUsers table', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const hotel = await createHotel();
+    const room = await createRoomByHotelId(hotel.id);
+
+    const response = await server.post(`/rooms`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+
+    const reservation = await prisma.roomsUsers.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    expect(response.status).toBe(httpStatus.CREATED);
+    expect(reservation).toBeTruthy();
+    expect(reservation.userId).toEqual(user.id);
+    expect(reservation.roomId).toEqual(room.id);
+  });
+
+  it('should return status 400 given invalid roomId', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const hotel = await createHotel();
+    const room = await createRoomByHotelId(hotel.id);
+
+    const response = await server
+      .post(`/rooms`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ roomId: room.id + 1000 });
+
+    const reservation = await prisma.roomsUsers.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(reservation).toBeNull();
+  });
+
+  it('should return status 401 if user already has a reserved room', async () => {
+    const user = await createUser();
+    const token = await generateValidToken(user);
+    const hotel = await createHotel();
+    const room = await createRoomByHotelId(hotel.id);
+
+    await server.post(`/rooms`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
+
+    const reservation = await prisma.roomsUsers.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    const secondRoom = await createRoomByHotelId(hotel.id);
+    const response = await server
+      .post(`/rooms`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ roomId: secondRoom.id });
+
+    expect(response.status).toBe(httpStatus.CONFLICT);
+    expect(reservation).toBeTruthy();
+    expect(reservation.userId).toEqual(user.id);
+    expect(reservation.roomId).toEqual(room.id);
   });
 });
