@@ -3,11 +3,12 @@ import { jest } from '@jest/globals';
 import { createPaymentBody, generateId } from '../factories';
 import { cleanMocks } from '../helpers';
 
-import paymentService, { duplicatedPaymentError } from '../../src/services/payments-service';
-import { notFoundTicketError } from '../../src/services/tickets-service';
+import paymentService from '@/services/payments-service';
+import { notFoundTicketError, duplicatedPaymentError } from '@/services';
 
-import paymentRepository from '../../src/repositories/payment-repository';
-import ticketRepository from '../../src/repositories/ticket-repository';
+import paymentRepository from '@/repositories/payment-repository';
+import ticketRepository from '@/repositories/ticket-repository';
+
 import { Payment, Ticket } from '@prisma/client';
 
 const sut = paymentService;
