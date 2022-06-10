@@ -1,8 +1,13 @@
-import { cannotEnrollBeforeStartDateError } from '@/errors';
-import userRepository from '@/repositories/user-repository';
-import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
+
+import { User } from '@prisma/client';
+
 import eventsService from '../events-service';
+import roomService from '../rooms-service';
+
+import userRepository from '@/repositories/user-repository';
+
+import { cannotEnrollBeforeStartDateError } from '@/errors';
 import { duplicatedEmailError } from './errors';
 
 export async function createUser({ email, password }: CreateUserParams): Promise<User> {
@@ -33,8 +38,17 @@ async function canEnrollOrFail() {
 
 export type CreateUserParams = Pick<User, 'email' | 'password'>;
 
+export async function getUserRoomInfo(userId: number) {
+  const room = await roomService.findRoomByUserIdOrFail(userId);
+
+  const occupation = await roomService.findRoomOccupation(room.id);
+
+  return { ...room, occupation };
+}
+
 const userService = {
   createUser,
+  getUserRoomInfo,
 };
 
 export * from './errors';
