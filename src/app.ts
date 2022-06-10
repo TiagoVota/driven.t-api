@@ -16,6 +16,7 @@ import {
   ticketsRouter,
   modalitiesRouter,
   paymentsRouter,
+  roomsRouter,
   hotelsRouter,
 } from '@/routers';
 
@@ -31,6 +32,7 @@ app
   .use('/tickets', ticketsRouter)
   .use('/modalities', modalitiesRouter)
   .use('/payments', paymentsRouter)
+  .use('/rooms', roomsRouter)
   .use('/hotels', hotelsRouter)
   .use(handleApplicationErrors);
 
