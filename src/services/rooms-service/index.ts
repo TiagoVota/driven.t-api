@@ -1,8 +1,8 @@
 import roomRepository from '@/repositories/room-repository';
 import hotelRepository from '@/repositories/hotel-repository';
-import roomsUsersRepository from '@/repositories/rooms-users-repository';
+import roomsUsersRepository from '@/repositories/roomsUsers-repository';
 import { Room } from '@prisma/client';
-import { hotelDoesNotExistsError, noFoundRoomError } from './errors';
+import { hotelDoesNotExistsError, noFoundRoomError, userAlreadyHasARoomError, roomDoesNotExistsError } from './errors';
 import { makeRoomTypeByCapacity } from './utils';
 
 async function getByHotelId(hotelId: number) {
@@ -14,6 +14,23 @@ async function getByHotelId(hotelId: number) {
   const rooms = await roomRepository.getByHotelId(hotelId);
 
   return await getRoomAvailabilities(rooms);
+}
+
+async function reservateRoom(userId: number, roomId: number) {
+  const room = await roomRepository.findById(roomId);
+  if (!room) throw roomDoesNotExistsError(roomId);
+
+  const userRoom = await roomRepository.findByUserId(userId);
+  if (userRoom) throw userAlreadyHasARoomError(userId);
+
+  await roomsUsersRepository.reservateRoom(userId, roomId);
+  return;
+}
+
+async function checkIfUserHasARoom(userId: number) {
+  const room = await roomsUsersRepository.findByUserId(userId);
+
+  return room;
 }
 
 async function getRoomAvailabilities(rooms: Room[]) {
@@ -45,6 +62,8 @@ async function findRoomOccupation(roomId: number) {
 
 const roomService = {
   getByHotelId,
+  reservateRoom,
+  checkIfUserHasARoom,
   findRoomByUserIdOrFail,
   findRoomOccupation,
 };

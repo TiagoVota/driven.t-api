@@ -17,9 +17,28 @@ async function deleteById(id: number) {
   });
 }
 
+async function getByRoomId(roomId: number) {
+  return prisma.roomsUsers.findMany({
+    where: {
+      roomId,
+    },
+  });
+}
+
+async function reservateRoom(userId: number, roomId: number) {
+  return prisma.roomsUsers.create({
+    data: {
+      userId,
+      roomId,
+    },
+  });
+}
+
 const roomsUsersRepository = {
   findByUserId,
   deleteById,
+  getByRoomId,
+  reservateRoom,
 };
 
 export default roomsUsersRepository;

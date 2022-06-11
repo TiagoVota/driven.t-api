@@ -13,3 +13,17 @@ export function noFoundRoomError(userId: number): ApplicationError {
     message: `There is no room from user with id '${userId}'!`,
   };
 }
+
+export function userAlreadyHasARoomError(userId: number): ApplicationError {
+  return {
+    name: 'UserAlreadyHasARoomError',
+    message: `The user ${userId} already has a room!`,
+  };
+}
+
+export function roomDoesNotExistsError(roomId: number): ApplicationError {
+  return {
+    name: 'RoomDoesNotExistsError',
+    message: `There is not a room with id ${roomId}!`,
+  };
+}
