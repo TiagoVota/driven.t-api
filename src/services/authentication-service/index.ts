@@ -54,6 +54,7 @@ type GetUserOrFailResult = Pick<User, 'id' | 'email' | 'password'>;
 
 const authenticationService = {
   signIn,
+  createSession,
 };
 
 export default authenticationService;
