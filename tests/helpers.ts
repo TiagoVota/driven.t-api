@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import * as jwt from 'jsonwebtoken';
 
-import { prisma } from '@/config';
+import { prisma, redis } from '@/config';
 
 import { createUser, createSession } from './factories';
 
@@ -20,6 +20,10 @@ export async function cleanDb() {
   await prisma.room.deleteMany({});
   await prisma.hotel.deleteMany({});
   await prisma.user.deleteMany({});
+}
+
+export async function cleanRedis() {
+  await redis.del('event');
 }
 
 export async function generateValidToken(user?: User) {

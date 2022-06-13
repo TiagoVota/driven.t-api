@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
 import faker from '@faker-js/faker';
 import { Event } from '@prisma/client';
-import { prisma } from '@/config';
+import { prisma, redis } from '@/config';
 
-export function createEvent(params: Partial<Event> = {}): Promise<Event> {
-  return prisma.event.create({
+export async function createEvent(params: Partial<Event> = {}): Promise<Event> {
+  await redis.del('event');
+
+  const event = await prisma.event.create({
     data: {
       title: params.title || faker.lorem.sentence(),
       backgroundImageUrl: params.backgroundImageUrl || faker.image.imageUrl(),
@@ -13,9 +15,12 @@ export function createEvent(params: Partial<Event> = {}): Promise<Event> {
       endsAt: params.endsAt || dayjs().add(5, 'days').toDate(),
     },
   });
+
+  return event;
 }
 
 export async function seedEvent() {
   await prisma.event.deleteMany({});
+  await redis.del('event');
   await createEvent();
 }
