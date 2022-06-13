@@ -1,4 +1,4 @@
-import { prisma } from '@/config';
+import { prisma, redis } from '@/config';
 
 async function findByUserId(userId: number) {
   return prisma.roomsUsers.findUnique({
@@ -9,6 +9,7 @@ async function findByUserId(userId: number) {
 }
 
 async function deleteById(id: number) {
+  await redis.del('hotels');
   return prisma.roomsUsers.delete({
     where: {
       id,
@@ -16,9 +17,28 @@ async function deleteById(id: number) {
   });
 }
 
+async function getByRoomId(roomId: number) {
+  return prisma.roomsUsers.findMany({
+    where: {
+      roomId,
+    },
+  });
+}
+
+async function reservateRoom(userId: number, roomId: number) {
+  return prisma.roomsUsers.create({
+    data: {
+      userId,
+      roomId,
+    },
+  });
+}
+
 const roomsUsersRepository = {
   findByUserId,
   deleteById,
+  getByRoomId,
+  reservateRoom,
 };
 
 export default roomsUsersRepository;

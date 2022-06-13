@@ -8,13 +8,23 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  if (err.name === 'CannotEnrollBeforeStartDateError') {
+  if (
+    err.name === 'CannotEnrollBeforeStartDateError' ||
+    err.name === 'HotelDoesNotExistsError' ||
+    err.name === 'RoomDoesNotExistsError'
+  ) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
   }
 
-  if (err.name === 'ConflictError' || err.name === 'DuplicatedEmailError' || err.name === 'DuplicatedUserError') {
+  const conflictErrorsNames = [
+    'ConflictError',
+    'DuplicatedEmailError',
+    'DuplicatedUserError',
+    'DuplicatedPaymentError',
+  ];
+  if (conflictErrorsNames.includes(err.name)) {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });
@@ -26,19 +36,20 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'NotFoundError') {
+  const notFoundErrorsNames = [
+    'NotFoundError',
+    'NotFoundTicketError',
+    'InvalidUserError',
+    'InvalidTicketError',
+    'NoFoundRoomError',
+  ];
+  if (notFoundErrorsNames.includes(err.name)) {
     return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,
     });
   }
 
-  if (err.name === 'NotFoundTicketError' || err.name === 'InvalidUserError' || err.name === 'InvalidTicketError') {
-    return res.status(httpStatus.NOT_FOUND).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === 'DuplicatedPaymentError') {
+  if (err.name === 'DuplicatedPaymentError' || err.name === 'UserAlreadyHasARoomError') {
     return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });

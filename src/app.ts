@@ -3,7 +3,7 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
 
-import { loadEnv, connectDb, disconnectDB } from '@/config';
+import { loadEnv, connectDb, disconnectDB, connectRedis, disconnectRedis } from '@/config';
 
 loadEnv();
 
@@ -16,6 +16,7 @@ import {
   ticketsRouter,
   modalitiesRouter,
   paymentsRouter,
+  roomsRouter,
   hotelsRouter,
   githubRouter,
 } from '@/routers';
@@ -32,17 +33,20 @@ app
   .use('/tickets', ticketsRouter)
   .use('/modalities', modalitiesRouter)
   .use('/payments', paymentsRouter)
+  .use('/rooms', roomsRouter)
   .use('/hotels', hotelsRouter)
   .use('/', githubRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
   connectDb();
+  connectRedis();
   return Promise.resolve(app);
 }
 
 export async function close(): Promise<void> {
   await disconnectDB();
+  await disconnectRedis();
 }
 
 export default app;
