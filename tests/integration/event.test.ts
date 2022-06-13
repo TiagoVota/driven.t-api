@@ -2,7 +2,7 @@ import app, { init } from '@/app';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createEvent } from '../factories';
-import { cleanDb } from '../helpers';
+import { cleanDb, cleanRedis } from '../helpers';
 
 beforeAll(async () => {
   await init();
@@ -12,6 +12,8 @@ beforeAll(async () => {
 const server = supertest(app);
 
 describe('GET /event', () => {
+  beforeEach(cleanRedis);
+
   it('should respond with status 404 if there is no event', async () => {
     const response = await server.get('/event');
 
