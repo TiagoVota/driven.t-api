@@ -35,7 +35,7 @@ app
   .use('/payments', paymentsRouter)
   .use('/rooms', roomsRouter)
   .use('/hotels', hotelsRouter)
-  .use('/', githubRouter)
+  .use('/oauth', githubRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {

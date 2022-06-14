@@ -2,7 +2,7 @@ import roomRepository from '@/repositories/room-repository';
 import hotelRepository from '@/repositories/hotel-repository';
 import roomsUsersRepository from '@/repositories/roomsUsers-repository';
 import { Room } from '@prisma/client';
-import { hotelDoesNotExistsError, noFoundRoomError, userAlreadyHasARoomError, roomDoesNotExistsError } from './errors';
+import { hotelDoesNotExistsError, noFoundRoomError, roomDoesNotExistsError } from './errors';
 import { makeRoomTypeByCapacity } from './utils';
 
 async function getByHotelId(hotelId: number) {
@@ -21,7 +21,7 @@ async function reservateRoom(userId: number, roomId: number) {
   if (!room) throw roomDoesNotExistsError(roomId);
 
   const userRoom = await roomRepository.findByUserId(userId);
-  if (userRoom) throw userAlreadyHasARoomError(userId);
+  if (userRoom) await deleteUserRoomById(userId);
 
   await roomsUsersRepository.reservateRoom(userId, roomId);
   return;
@@ -58,6 +58,15 @@ async function findRoomOccupation(roomId: number) {
   const occupation = roomUsers.length;
 
   return occupation;
+}
+
+async function deleteUserRoomById(userId: number) {
+  const selectedRoom = await roomsUsersRepository.findByUserId(userId);
+
+  if (selectedRoom === null) return;
+
+  const { id } = selectedRoom;
+  await roomsUsersRepository.deleteById(id);
 }
 
 const roomService = {

@@ -42,6 +42,7 @@
     "test:local:migrate": "npm run test:load-envs prisma migrate dev",
     "test:local:studio": "npm run test:load-envs prisma studio",
     "test:local:seed": "npm run test:load-envs -- ts-node prisma/seed.ts",
+    "test:unit": "npm run test:load-envs jest ./unit",
     "redis": "redis-server"
   },
   "keywords": [

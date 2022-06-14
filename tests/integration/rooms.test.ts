@@ -114,30 +114,4 @@ describe('POST /rooms', () => {
     expect(response.status).toBe(httpStatus.BAD_REQUEST);
     expect(reservation).toBeNull();
   });
-
-  it('should return status 401 if user already has a reserved room', async () => {
-    const user = await createUser();
-    const token = await generateValidToken(user);
-    const hotel = await createHotel();
-    const room = await createRoomByHotelId(hotel.id);
-
-    await server.post(`/rooms`).set('Authorization', `Bearer ${token}`).send({ roomId: room.id });
-
-    const reservation = await prisma.roomsUsers.findUnique({
-      where: {
-        userId: user.id,
-      },
-    });
-
-    const secondRoom = await createRoomByHotelId(hotel.id);
-    const response = await server
-      .post(`/rooms`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ roomId: secondRoom.id });
-
-    expect(response.status).toBe(httpStatus.CONFLICT);
-    expect(reservation).toBeTruthy();
-    expect(reservation.userId).toEqual(user.id);
-    expect(reservation.roomId).toEqual(room.id);
-  });
 });

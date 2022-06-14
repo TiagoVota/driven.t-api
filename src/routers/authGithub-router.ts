@@ -6,7 +6,7 @@ import { ApplicationError } from '@/protocols';
 
 const githubRouter = Router();
 
-githubRouter.post('/oauth/github/login', async (req: Request, res: Response) => {
+githubRouter.post('/github/login', async (req: Request, res: Response) => {
   const code = req.body.code;
 
   const response = await axios.post(`https://github.com/login/oauth/access_token`, {
