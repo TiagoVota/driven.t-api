@@ -16,15 +16,16 @@ enum ModalityName {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  email      String       @unique @db.VarChar(255)
-  password   String       @db.VarChar(255)
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Session    Session[]
-  Enrollment Enrollment[]
-  Ticket     Ticket[]
-  RoomsUsers RoomsUsers[]
+  id              Int               @id @default(autoincrement())
+  email           String            @unique @db.VarChar(255)
+  password        String            @db.VarChar(255)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Session         Session[]
+  Enrollment      Enrollment[]
+  Ticket          Ticket[]
+  RoomsUsers      RoomsUsers[]
+  ActivitiesUsers ActivitiesUsers[]
 }
 
 model Session {
@@ -134,4 +135,38 @@ model RoomsUsers {
   User   User @relation(fields: [userId], references: [id])
   roomId Int
   Room   Room @relation(fields: [roomId], references: [id])
+}
+
+model EventDay {
+  id       Int        @id @default(autoincrement())
+  date     DateTime   @unique @db.Date
+  Activity Activity[]
+}
+
+model Location {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique @db.VarChar(255)
+  Activity Activity[]
+}
+
+model Activity {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(255)
+  startAt         Decimal           @db.Decimal(4, 2)
+  duration        Decimal           @db.Decimal(4, 2)
+  capacity        Int
+  occupation      Int
+  eventDayId      Int
+  EventDay        EventDay          @relation(fields: [eventDayId], references: [id])
+  locationId      Int
+  Location        Location          @relation(fields: [locationId], references: [id])
+  ActivitiesUsers ActivitiesUsers[]
+}
+
+model ActivitiesUsers {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  User       User     @relation(fields: [userId], references: [id])
+  activityId Int
+  Activity   Activity @relation(fields: [activityId], references: [id])
 }
