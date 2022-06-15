@@ -19,6 +19,7 @@ import {
   roomsRouter,
   hotelsRouter,
   githubRouter,
+  eventDayRouter,
 } from '@/routers';
 
 const app = express();
@@ -36,6 +37,7 @@ app
   .use('/rooms', roomsRouter)
   .use('/hotels', hotelsRouter)
   .use('/oauth', githubRouter)
+  .use('/eventday', eventDayRouter)
   .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {

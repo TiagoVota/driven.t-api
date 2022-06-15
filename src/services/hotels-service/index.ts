@@ -1,4 +1,5 @@
 import hotelRepository from '@/repositories/hotel-repository';
+import { notFoundHotelsError } from './errors';
 
 type HotelRoom = {
   id: number;
@@ -8,6 +9,9 @@ type HotelRoom = {
 
 export async function getHotels() {
   const hotels = await hotelRepository.getHotels();
+  if (!hotels) {
+    throw notFoundHotelsError();
+  }
   const capacityAndOccupation = await countCapacityAndOccupation(hotels);
   return capacityAndOccupation;
 }
