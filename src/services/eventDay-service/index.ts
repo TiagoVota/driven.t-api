@@ -19,7 +19,7 @@ function dateToDays(eventDays: EventDay[]) {
     const formatDateToDays = eventDays[i].date.toLocaleDateString('pt-BR', options);
     const day = {
       id: eventDays[i].id,
-      day: formatDateToDays.charAt(0).toUpperCase() + formatDateToDays.slice(1),
+      day: (formatDateToDays.charAt(0).toUpperCase() + formatDateToDays.slice(1)).replace('-feira', ''),
     };
     days.push(day);
   }
