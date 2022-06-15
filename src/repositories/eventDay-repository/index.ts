@@ -1,7 +1,13 @@
 import { prisma } from '@/config';
 
 async function findEventDays() {
-  const eventDays = await prisma.eventDay.findMany({});
+  const eventDays = await prisma.eventDay.findMany({
+    orderBy: [
+      {
+        date: 'asc',
+      },
+    ],
+  });
   return eventDays;
 }
 
