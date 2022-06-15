@@ -12,7 +12,7 @@ export async function getEventDays() {
 }
 
 function dateToDays(eventDays: EventDay[]) {
-  const options: object = { weekday: 'long', month: 'long', day: 'numeric' };
+  const options: object = { weekday: 'long', month: 'numeric', day: 'numeric' };
   const days = [];
 
   for (let i = 0; i < eventDays.length; i++) {
