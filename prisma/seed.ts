@@ -76,6 +76,7 @@ async function main() {
     { name: 'Driven Palace', image: 'https://picsum.photos/300/300' },
     { name: 'Driven World', image: 'https://picsum.photos/300/300' },
   ] as Hotel[];
+  await prisma.room.deleteMany({});
   await prisma.hotel.deleteMany({});
   await prisma.hotel.createMany({
     data: hotelsList,

@@ -19,7 +19,7 @@ function dateToDays(eventDays: EventDay[]) {
     const day = {
       id: eventDays[i].id,
       day: (formatDateToDays.charAt(0).toUpperCase() + formatDateToDays.slice(1)).replace('-feira', ''),
-      activities: eventDays[i].Activity,
+      location: eventDays[i].Location,
     };
     days.push(day);
   }
@@ -29,7 +29,7 @@ function dateToDays(eventDays: EventDay[]) {
 export interface EventDay {
   id: number;
   date: Date;
-  Activity: object[];
+  Location: object[];
 }
 
 const eventDayService = {
