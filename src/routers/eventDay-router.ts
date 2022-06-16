@@ -4,6 +4,6 @@ import { authenticateToken } from '@/middlewares';
 
 const eventDayRouter = Router();
 
-eventDayRouter.get('/', authenticateToken, getEventDays);
+eventDayRouter.get('/', getEventDays);
 
 export { eventDayRouter };

@@ -8,12 +8,12 @@ async function findEventDays() {
       },
     ],
     include: {
-      Activity: {
-        orderBy: [
-          {
-            startAt: 'asc',
+      Location: {
+        include: {
+          Activity: {
+            orderBy: [{ startAt: 'asc' }],
           },
-        ],
+        },
       },
     },
   });
