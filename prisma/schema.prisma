@@ -149,6 +149,8 @@ model Location {
   eventDayId Int
   EventDay   EventDay   @relation(fields: [eventDayId], references: [id])
   Activity   Activity[]
+
+  @@index([eventDayId])
 }
 
 model Activity {
