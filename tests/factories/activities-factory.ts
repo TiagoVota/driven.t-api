@@ -32,3 +32,14 @@ export async function seedActivity(params: Partial<Activity>) {
 
   return { eventDay, location, activity };
 }
+
+export async function findUserActivity(userId: number, activityId: number) {
+  const userActivity = await prisma.activitiesUsers.findFirst({
+    where: {
+      userId,
+      activityId,
+    },
+  });
+
+  return userActivity;
+}

@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import { createEvent, createUser, findUserById, seedEvent } from '../factories';
+import { createEvent, createUser, findUserActivity, findUserById, seedActivity, seedEvent } from '../factories';
 import { createRoomsUser } from '../factories/roomsUsers-factory';
 import { cleanDb, cleanRedis, generateValidToken } from '../helpers';
 
@@ -127,16 +127,20 @@ describe('GET /users/room', () => {
 
 describe('POST /users/activities/:activityId/register', () => {
   it('should return status 201 and insert user activity', async () => {
-    const userRoom = await createRoomsUser();
-    const user = await findUserById(userRoom.userId);
+    const { activity } = await seedActivity({});
+    const user = await createUser();
     const token = await generateValidToken(user);
 
-    const response = await server.get('/users/room').set('Authorization', `Bearer ${token}`);
+    const response = await server
+      .post(`/users/activities/${activity.id}/register`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
 
-    expect(response.status).toBe(httpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toHaveProperty('hotel');
-    expect(response.body).toHaveProperty('roomType');
+    const userActivity = await findUserActivity(user.id, activity.id);
+
+    expect(response.status).toBe(httpStatus.CREATED);
+    expect(userActivity).not.toBeNull();
     expect(response.body.capacity).toBeGreaterThanOrEqual(response.body.occupation);
+    expect(response.body.occupation).toEqual(activity.occupation + 1);
   });
 });
