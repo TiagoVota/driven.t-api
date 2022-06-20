@@ -25,7 +25,6 @@ export async function getRoomBooking(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function makeActivityRegister(req: AuthenticatedRequest, res: Response) {
-  return res.status(httpStatus.CREATED).send('activity');
   const userId = req.userId;
   const activityId = req.params.activityId;
 

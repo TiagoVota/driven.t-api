@@ -8,11 +8,13 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  if (
-    err.name === 'CannotEnrollBeforeStartDateError' ||
-    err.name === 'HotelDoesNotExistsError' ||
-    err.name === 'RoomDoesNotExistsError'
-  ) {
+  const badRequestErrorsNames = [
+    'CannotEnrollBeforeStartDateError',
+    'HotelDoesNotExistsError',
+    'RoomDoesNotExistsError',
+    'RegisterActivityError',
+  ];
+  if (badRequestErrorsNames.includes(err.name)) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
@@ -23,6 +25,11 @@ export function handleApplicationErrors(
     'DuplicatedEmailError',
     'DuplicatedUserError',
     'DuplicatedPaymentError',
+    'DuplicatedPaymentError',
+    'UserAlreadyHasARoomError',
+    'ConflictUserActivityError',
+    'ConflictTimeActivityError',
+    'FilledActivityError',
   ];
   if (conflictErrorsNames.includes(err.name)) {
     return res.status(httpStatus.CONFLICT).send({
@@ -30,7 +37,8 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'InvalidCredentialsError' || err.name === 'unavailableEmailError') {
+  const unauthorizedErrorsNames = ['UnauthorizedError', 'InvalidCredentialsError', 'unavailableEmailError'];
+  if (unauthorizedErrorsNames.includes(err.name)) {
     return res.status(httpStatus.UNAUTHORIZED).send({
       message: err.message,
     });
@@ -46,12 +54,6 @@ export function handleApplicationErrors(
   ];
   if (notFoundErrorsNames.includes(err.name)) {
     return res.status(httpStatus.NOT_FOUND).send({
-      message: err.message,
-    });
-  }
-
-  if (err.name === 'DuplicatedPaymentError' || err.name === 'UserAlreadyHasARoomError') {
-    return res.status(httpStatus.CONFLICT).send({
       message: err.message,
     });
   }
