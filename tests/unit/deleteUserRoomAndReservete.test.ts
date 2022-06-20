@@ -14,7 +14,7 @@ describe('you must book a room for a user who already has a room', () => {
     cleanMocks();
   });
 
-  it('retorn 200 on the room change', async () => {
+  it('return 200 on the room change', async () => {
     const initialUserRoom = await createRoomsUser();
     const { userId } = initialUserRoom;
 
@@ -23,7 +23,7 @@ describe('you must book a room for a user who already has a room', () => {
 
     const newUserRoom = await usersRoomRepository.findByUserId(userId);
 
-    await expect(initialUserRoom.userId).toEqual(newUserRoom.userId);
-    await expect(initialUserRoom.roomId).not.toEqual(newUserRoom.roomId);
+    expect(initialUserRoom.userId).toEqual(newUserRoom.userId);
+    expect(initialUserRoom.roomId).not.toEqual(newUserRoom.roomId);
   });
 });

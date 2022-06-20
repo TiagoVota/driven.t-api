@@ -5,13 +5,14 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import { createEvent, createUser, findUserById, seedEvent } from '../factories';
+import { createEvent, createUser, findUserActivity, findUserById, seedActivity, seedEvent } from '../factories';
 import { createRoomsUser } from '../factories/roomsUsers-factory';
-import { cleanDb, generateValidToken } from '../helpers';
+import { cleanDb, cleanRedis, generateValidToken } from '../helpers';
 
 beforeAll(async () => {
   await init();
   await cleanDb();
+  await cleanRedis();
 });
 
 const server = supertest(app);
@@ -121,5 +122,25 @@ describe('GET /users/room', () => {
     expect(response.body).toHaveProperty('hotel');
     expect(response.body).toHaveProperty('roomType');
     expect(response.body.capacity).toBeGreaterThanOrEqual(response.body.occupation);
+  });
+});
+
+describe('POST /users/activities/:activityId/register', () => {
+  it('should return status 201 and insert user activity', async () => {
+    const { activity } = await seedActivity({});
+    const user = await createUser();
+    const token = await generateValidToken(user);
+
+    const response = await server
+      .post(`/users/activities/${activity.id}/register`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+
+    const userActivity = await findUserActivity(user.id, activity.id);
+
+    expect(response.status).toBe(httpStatus.CREATED);
+    expect(userActivity).not.toBeNull();
+    expect(response.body.capacity).toBeGreaterThanOrEqual(response.body.occupation);
+    expect(response.body.occupation).toEqual(activity.occupation + 1);
   });
 });

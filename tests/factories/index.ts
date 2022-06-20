@@ -9,3 +9,6 @@ export * from './id-factory';
 export * from './hotels-factory';
 export * from './rooms-factory';
 export * from './roomsUsers-factory';
+export * from './eventDays-factory';
+export * from './locations-factory';
+export * from './activities-factory';
