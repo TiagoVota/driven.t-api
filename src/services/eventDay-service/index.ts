@@ -1,13 +1,25 @@
 import eventDayRepository from '@/repositories/eventDay-repository';
+import activityRepository, { UserActivities } from '@/repositories/activity-repository';
+
 import { notFoundEventDaysError } from './errors';
 
-export async function getEventDays() {
+export async function getEventDays(userId: number) {
   const eventDays = await eventDayRepository.findEventDays();
   if (!eventDays) {
     throw notFoundEventDaysError();
   }
   const formatEventDays = dateToDays(eventDays);
-  return formatEventDays;
+
+  const userActivities = await activityRepository.findUserActivities(userId);
+
+  return {
+    days: formatEventDays,
+    userActivities: formatUserActivities(userActivities),
+  };
+}
+
+function formatUserActivities(userActivities: UserActivities) {
+  return userActivities.map((userActivity) => userActivity.Activity);
 }
 
 function dateToDays(eventDays: EventDay[]) {

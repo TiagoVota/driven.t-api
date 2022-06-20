@@ -1,8 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import httpStatus from 'http-status';
-import eventDayService from '@/services/eventDay-service';
 
-export async function getEventDays(req: Request, res: Response) {
-  const eventDays = await eventDayService.getEventDays();
+import eventDayService from '@/services/eventDay-service';
+import { AuthenticatedRequest } from '@/middlewares';
+
+export async function getEventDays(req: AuthenticatedRequest, res: Response) {
+  const userId = req.userId;
+
+  const eventDays = await eventDayService.getEventDays(+userId);
+
   return res.status(httpStatus.OK).send(eventDays);
 }

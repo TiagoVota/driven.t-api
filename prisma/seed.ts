@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  // CREATE EVENT
   let event = await prisma.event.findFirst();
   if (!event) {
     event = await prisma.event.create({
