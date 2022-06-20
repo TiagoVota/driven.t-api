@@ -105,6 +105,7 @@ async function main() {
     { date: new Date('2022-06-08T00:00:00.000Z') },
   ] as EventDay[];
 
+  await prisma.activitiesUsers.deleteMany({});
   await prisma.activity.deleteMany({});
   await prisma.location.deleteMany({});
   await prisma.eventDay.deleteMany({});
