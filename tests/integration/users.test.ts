@@ -7,11 +7,12 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createEvent, createUser, findUserById, seedEvent } from '../factories';
 import { createRoomsUser } from '../factories/roomsUsers-factory';
-import { cleanDb, generateValidToken } from '../helpers';
+import { cleanDb, cleanRedis, generateValidToken } from '../helpers';
 
 beforeAll(async () => {
   await init();
   await cleanDb();
+  await cleanRedis();
 });
 
 const server = supertest(app);
@@ -110,6 +111,22 @@ describe('POST /users', () => {
 
 describe('GET /users/room', () => {
   it("should respond with status 200 and show user's room info", async () => {
+    const userRoom = await createRoomsUser();
+    const user = await findUserById(userRoom.userId);
+    const token = await generateValidToken(user);
+
+    const response = await server.get('/users/room').set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(httpStatus.OK);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('hotel');
+    expect(response.body).toHaveProperty('roomType');
+    expect(response.body.capacity).toBeGreaterThanOrEqual(response.body.occupation);
+  });
+});
+
+describe('POST /users/activities/:activityId/register', () => {
+  it('should return status 201 and insert user activity', async () => {
     const userRoom = await createRoomsUser();
     const user = await findUserById(userRoom.userId);
     const token = await generateValidToken(user);

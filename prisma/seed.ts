@@ -128,7 +128,11 @@ async function main() {
     data: locationsList,
   });
 
-  const locationsForFirstDate = await prisma.location.findMany({ where: { eventDayId: eventDays[0].id } });
+  const locationsForFirstDate = await prisma.location.findMany({
+    where: {
+      eventDayId: eventDays[0].id,
+    },
+  });
   const activitiesList = [
     {
       name: 'Minecraft: montando o PC ideal',
