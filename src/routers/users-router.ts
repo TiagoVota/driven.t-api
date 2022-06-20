@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createUserSchema } from '@/schemas';
+import { activityInscriptionSchema, createUserSchema } from '@/schemas';
 import { authenticateToken, validateBody, validateParams } from '@/middlewares';
 import { getRoomBooking, usersPost, makeActivityRegister } from '@/controllers';
 
@@ -10,6 +10,6 @@ usersRouter.post('/', validateBody(createUserSchema), usersPost);
 
 usersRouter.use(authenticateToken);
 usersRouter.get('/room', getRoomBooking);
-usersRouter.get('/activities/:activityId/register', validateParams(createUserSchema), makeActivityRegister);
+usersRouter.post('/activities/:activityId/register', validateParams(activityInscriptionSchema), makeActivityRegister);
 
 export { usersRouter };

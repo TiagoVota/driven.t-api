@@ -9,7 +9,6 @@ import { duplicatedUserError, invalidUserError, invalidTicketError } from './err
 
 export type CreateTicketParams = Pick<Ticket, 'modalityId' | 'userId'>;
 
-// CREATE TICKET
 export async function createTicket(CreateTicketParams: CreateTicketParams) {
   await checkIfUserExists(CreateTicketParams.userId);
   await checkIfUserAlreadyHasATicket(CreateTicketParams.userId);
@@ -31,7 +30,6 @@ async function checkIfUserAlreadyHasATicket(userId: number) {
   }
 }
 
-// FIND TICKET PRICE
 export async function findTicketPriceByUserId(userId: number) {
   await checkIfUserExists(userId);
   const ticketInfo = await checkIfTicketExists(userId);

@@ -44,7 +44,7 @@ function validateActivitiesTimeOrFail(activity: ActivityWithLocation, userActivi
   const haveConflictActivityTime = userActivities.some((userActivity) => {
     const actualActivity = userActivity.Activity;
     const actualStart = Number(actualActivity.startAt);
-    const actualEnd = activityStart + Number(actualActivity.duration);
+    const actualEnd = actualStart + Number(actualActivity.duration);
 
     const chosenStartsInsideActual = actualStart <= activityStart && activityStart < actualEnd;
     const chosenEndsInActual = actualStart < activityEnd && activityEnd <= actualEnd;

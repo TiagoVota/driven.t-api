@@ -18,6 +18,21 @@ async function findById(id: number) {
   return activity;
 }
 
+export type UserActivities = UnboxPromise<ReturnType<typeof findUserActivities>>;
+
+async function findUserActivities(userId: number) {
+  const userActivity = await prisma.activitiesUsers.findMany({
+    where: {
+      userId,
+    },
+    include: {
+      Activity: true,
+    },
+  });
+
+  return userActivity;
+}
+
 export type UserDayActivities = UnboxPromise<ReturnType<typeof findUserDayActivities>>;
 
 async function findUserDayActivities(userId: number, eventDayId: number) {
@@ -81,6 +96,7 @@ async function createUserActivity(id: number, userId: number) {
 
 const activityRepository = {
   findById,
+  findUserActivities,
   findUserDayActivities,
   registerUser,
 };
