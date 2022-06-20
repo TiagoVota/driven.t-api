@@ -133,7 +133,7 @@ describe('creditCardInfoSchema', () => {
 
     it('should return error if totalPrice is not a integer', () => {
       const input = createPaymentBody();
-      input.totalPrice = faker.datatype.number({ precision: 0.1 });
+      input.totalPrice = faker.datatype.number({ precision: 0.42 });
 
       const { error } = sut.validate(input);
 
@@ -142,7 +142,7 @@ describe('creditCardInfoSchema', () => {
 
     it('should return error if totalPrice is lower than 1', () => {
       const input = createPaymentBody();
-      input.totalPrice = faker.datatype.number({ max: 0 });
+      input.totalPrice = faker.datatype.number({ min: -42, max: 0 });
 
       const { error } = sut.validate(input);
 
