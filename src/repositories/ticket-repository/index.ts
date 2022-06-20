@@ -31,7 +31,11 @@ async function findTicketByUserId(userId: number) {
       userId,
     },
     include: {
-      Modality: true,
+      Modality: {
+        include: {
+          HotelOption: true,
+        },
+      },
     },
   });
 }
