@@ -1,6 +1,5 @@
 import eventDayRepository from '@/repositories/eventDay-repository';
 import { notFoundEventDaysError } from './errors';
-import { EventDay } from '@prisma/client';
 
 export async function getEventDays() {
   const eventDays = await eventDayRepository.findEventDays();
@@ -20,10 +19,17 @@ function dateToDays(eventDays: EventDay[]) {
     const day = {
       id: eventDays[i].id,
       day: (formatDateToDays.charAt(0).toUpperCase() + formatDateToDays.slice(1)).replace('-feira', ''),
+      location: eventDays[i].Location,
     };
     days.push(day);
   }
   return days;
+}
+
+export interface EventDay {
+  id: number;
+  date: Date;
+  Location: object[];
 }
 
 const eventDayService = {

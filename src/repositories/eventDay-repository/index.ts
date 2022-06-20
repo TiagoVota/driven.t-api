@@ -7,6 +7,15 @@ async function findEventDays() {
         date: 'asc',
       },
     ],
+    include: {
+      Location: {
+        include: {
+          Activity: {
+            orderBy: [{ startAt: 'asc' }],
+          },
+        },
+      },
+    },
   });
   return eventDays;
 }

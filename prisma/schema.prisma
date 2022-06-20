@@ -140,13 +140,17 @@ model RoomsUsers {
 model EventDay {
   id       Int        @id @default(autoincrement())
   date     DateTime   @unique @db.Date
-  Activity Activity[]
+  Location Location[]
 }
 
 model Location {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique @db.VarChar(255)
-  Activity Activity[]
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(255)
+  eventDayId Int
+  EventDay   EventDay   @relation(fields: [eventDayId], references: [id])
+  Activity   Activity[]
+
+  @@index([eventDayId])
 }
 
 model Activity {
@@ -156,8 +160,6 @@ model Activity {
   duration        Decimal           @db.Decimal(4, 2)
   capacity        Int
   occupation      Int
-  eventDayId      Int
-  EventDay        EventDay          @relation(fields: [eventDayId], references: [id])
   locationId      Int
   Location        Location          @relation(fields: [locationId], references: [id])
   ActivitiesUsers ActivitiesUsers[]
