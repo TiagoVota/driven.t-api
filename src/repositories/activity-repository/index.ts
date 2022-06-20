@@ -1,5 +1,6 @@
 import { prisma } from '@/config';
 import { filledActivityError } from '@/services';
+import { Location } from '@prisma/client';
 
 type UnboxPromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
 
@@ -26,7 +27,11 @@ async function findUserActivities(userId: number) {
       userId,
     },
     include: {
-      Activity: true,
+      Activity: {
+        include: {
+          Location: true,
+        },
+      },
     },
   });
 
