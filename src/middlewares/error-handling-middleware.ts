@@ -42,6 +42,7 @@ export function handleApplicationErrors(
     'InvalidUserError',
     'InvalidTicketError',
     'NoFoundRoomError',
+    'NotFoundActivityError',
   ];
   if (notFoundErrorsNames.includes(err.name)) {
     return res.status(httpStatus.NOT_FOUND).send({
